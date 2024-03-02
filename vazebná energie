@@ -1,0 +1,28 @@
+import numpy as np
+from scipy.optimize import bisect
+
+rmax = 3
+A = 1 
+μ = 938 * 938 / (938 + 938)
+h_bar = 1.054571628e-34
+
+def fce(E):
+    if E < 0:
+        return np.inf
+    
+    if np.abs(E) < 1e-15: 
+        return np.inf
+    
+    def u(r, E):
+        return A * np.exp((-np.sqrt(2 * μ * np.abs(E)) / h_bar) * r)
+    
+    u_nekonecno = u(np.inf, E)
+    u_rmax = u(rmax, E)
+    
+    u_hodnotacelkem = u_nekonecno - u_rmax
+    
+    return u_hodnotacelkem
+
+root = bisect(fce, -10, 2)
+
+print("Vazebná energie E v MeV:", root)
